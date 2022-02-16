@@ -1,4 +1,4 @@
-# Ritesh-StudentResultGenerator
+# Student Result Generator
 ## Title : - "Student Result Generator"
 This one is my mini project called "Student Result Generator" in which, html is used for front end , javascript for backend and JsonPowerDB for database management.
 It's nothing but the user interface where teacher can enter student's common details such as Name, Student Roll No, email Id and Date of birth. As this is the result generating system, teacher has to enter student's marks of respective subjects. After entering all necessary details, there are 3 buttons available for student such as, Calculate Percentages, Save the details and Show my details. 
