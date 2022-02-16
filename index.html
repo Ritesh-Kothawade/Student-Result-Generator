@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Student Database</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://login2explore.com/jpdb/resources/js/0.0.4/jpdb-commons.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h2> Student Result Generator</h2>
+            <form id="StudentDatabase" method="post">
+                <div class="form-group">
+                    <span><label for="studroll">Student Roll no:</label> <label id="studIdMsg">
+                        </label></span>
+                    <input type="text" class="form-control" name="studroll" id="studroll" placeholder="Enter Student Rollno" required>
+                </div>
+                <div class="form-group">
+                    <label for="studName">Student Name:</label>
+                    <input type="text" class="form-control" id="studName" placeholder="Enter Student Name" name="studName" required>
+                </div>
+                <div class="form-group">
+                    <label for="studEmail">Student Email:</label>
+                    <input type="email" class="form-control" id="studEmail" placeholder="Enter Student Email" name="studEmail">
+                </div>
+                <div class="form-group">
+                    <label for="studdob">Student DOB</label>
+                    <input type="date" class="form-control" id="studdob" name="studdob">
+                </div>
+                <div class="form-group">
+                    <label for="science">Obtained marks in Science:</label>
+                    <input type="number" class="form-control" id="science" placeholder="Enter Marks of Science" name="science" required>
+                </div>
+                <div class="form-group">
+                    <label for="maths">Obtained marks in Mathematics:</label>
+                    <input type="number" class="form-control" id="maths" placeholder="Enter Marks of Mathematics" name="maths" required>
+                </div>
+                <div class="form-group">
+                    <label for="english">Obtained marks in English:</label>
+                    <input type="number" class="form-control" id="english" placeholder="Enter Marks of English" name="english" required>
+                </div>
+                <div class="form-group">
+                    <label for="socialsci">Obtained marks in Social Science:</label>
+                    <input type="number" class="form-control" id="socialsci" placeholder="Enter Marks of Social Science" name="socialsci" required>
+                </div>
+                <div class="form-group">
+                    <label for="hindi">Obtained marks in Hindi:</label>
+                    <input type="number" class="form-control" id="hindi" placeholder="Enter Marks of Hindi" name="hindi" required>
+                </div>
+
+                <input type="button" class="btn btn-primary" id="percent" value="Calculate Percentage" onclick="calcPercent();">
+                <input type="button" class="btn btn-primary" id="studSave" value="Save the Details" onclick="saveStudent();">
+                <input type="button" class="btn btn-primary" id="studShow" value="Show My Details" onclick="showDetails();">
+            </form>
+        </div>
+        <script>
+            function validateAndGetFormData() {
+                var studrollVar = $("#studroll").val();
+                if (studrollVar === "") {
+                    alert("Student Roll No is Required!");
+                    $("#studroll").focus();
+                    return "";
+                }
+                var studNameVar = $("#studName").val();
+                if (studNameVar === "") {
+                    alert("Student Name is Required!");
+                    $("#studName").focus();
+                    return "";
+                }
+                var studEmailVar = $("#studEmail").val();
+                if (studEmailVar === "") {
+                    alert("Student Email is Required!");
+                    $("#studEmail").focus();
+                    return "";
+                }
+                var studDOBVar = $("#studdob").val();
+                if (studDOBVar === "") {
+                    alert("Student Date Of Birth is Required!");
+                    $("#studdob").focus();
+                    return "";
+                }
+                var scienceVar = $("#science").val();
+                if (scienceVar === "") {
+                    alert("Marks of Science are Required");
+                    $("#science").focus();
+                    return "";
+                }
+                var mathsVar = $("#maths").val();
+                if (mathsVar === "") {
+                    alert("Marks of Mathematics are Required!");
+                    $("#maths").focus();
+                    return "";
+                }
+                var englishVar = $("#english").val();
+                if (englishVar === "") {
+                    alert("Marks of English are Required!");
+                    $("#nisMarks").focus();
+                    return "";
+                }
+                var socialsciVar = $("#socialsci").val();
+                if (socialsciVar === "") {
+                    alert("Marks of Social Science are Required!");
+                    $("#socialsci").focus();
+                    return "";
+                }
+                var hindiVar = $("#hindi").val();
+                if (hindiVar === "") {
+                    alert("Marks of Hindi are Required!");
+                    $("#hindi").focus();
+                    return "";
+                }
+
+
+                if (scienceVar < 0) {
+                    alert("Negative marks found");
+                    $("#science").focus();
+                    return "";
+                }
+                if (mathsVar < 0) {
+                    alert("Negative marks found");
+                    $("#maths").focus();
+                    return "";
+                }
+                if (englishVar < 0) {
+                    alert("Negative marks found");
+                    $("#english").focus();
+                    return "";
+                }
+                if (socialsciVar < 0) {
+                    alert("Negative marks found");
+                    $("#socialsci").focus();
+                    return "";
+                }
+                if (hindiVar < 0) {
+                    alert("Negative marks found");
+                    $("#hindi").focus();
+                    return "";
+                }
+                var totVar = totalMarks();
+                var perVar = percent();
+                var passVar = isPass();
+                var jsonStrObj = {
+                    studroll: studrollVar,
+                    studName: studNameVar,
+                    studEmail: studEmailVar,
+                    studdob: studDOBVar,
+                    science: scienceVar,
+                    maths: mathsVar,
+                    english: englishVar,
+                    socialsci: socialsciVar,
+                    hindi: hindiVar,
+                    total: totVar,
+                    studPer: perVar,
+                    passOrNot: passVar
+
+                };
+                return JSON.stringify(jsonStrObj);
+            }
+
+            function resetForm() {
+                $("#studroll").val("")
+                $("#studName").val("");
+                $("#studEmail").val("");
+                $("#studdob").val("");
+                $("#science").val("");
+                $("#maths").val("");
+                $("#english").val("");
+                $("#socialsci").val("");
+                $("#hindi").val("");
+                $("#studroll").focus();
+            }
+            function totalMarks() {
+                const science = Number($("#science").val());
+                const maths = Number($("#maths").val());
+                const english = Number($("#english").val());
+                const socialsci = Number($("#socialsci").val());
+                const hindi = Number($("#hindi").val());
+                const total = science + maths + english + socialsci + hindi;
+                return total;
+            }
+
+            function percent()
+            {
+                const percent = Number((totalMarks() / 500) * 100);
+                return percent;
+            }
+            function calcPercent()
+            {
+                if (percent() < 40)
+                    alert("Sorry but you are failed! Your percentagres are " + percent() + "%");
+                else {
+                    alert("Congratulations you passed exam! Your percentagres are " + percent() + "%");
+
+                }
+            }
+            function isPass() {
+                if (percent() < 40)
+                    return "Fail"
+                else {
+                    return "Pass"
+                }
+            }
+            function showDetails() {
+                var key = {
+                    studName: $("#studName").val()
+                }
+                var getRequest = createGETRequest("90938381|-31948828462084606|90947504", "Student", "Stud-data", key);
+                jQuery.ajaxSetup({async: false});
+                var resultObj = executeCommandAtGivenBaseUrl(getRequest, "http://api.login2explore.com:5577", "/api/irl");
+                alert(JSON.stringify(resultObj));
+                jQuery.ajaxSetup({async: true});
+
+            }
+            function saveStudent() {
+                var jsonStr = validateAndGetFormData();
+                if (jsonStr === "") {
+                    return;
+                }
+                var putReqStr = createPUTRequest("90938381|-31948828462084606|90947504",
+                        jsonStr, "Student", "Stud-data");
+
+                jQuery.ajaxSetup({async: false});
+                var resultObj = executeCommandAtGivenBaseUrl(putReqStr, "http://api.login2explore.com:5577", "/api/iml");
+                alert("Data saved!");
+                jQuery.ajaxSetup({async: true});
+                resetForm();
+            }
+        </script>
+    </body>
+</html>
+
